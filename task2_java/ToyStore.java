@@ -57,7 +57,7 @@ public class ToyStore {
     }
 
     private void writeFile(Toy toy) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("toys.txt", true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("task2_java/toys.txt", true))) {
             writer.write(toy.getName() + "\r\n");
         } catch (IOException e) {
             System.out.println("Ошибка записи в файл");
