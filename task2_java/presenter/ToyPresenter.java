@@ -14,20 +14,32 @@ public class ToyPresenter {
         this.toys = ToyModel.loadFromFile();
     }
 
+    public ToyPresenter() {
+        this.toys = new ToyModel[0];
+        this.view = null;
+    }
+
+    public void setToys(ToyModel[] toys) {
+        this.toys = toys;
+    }
+
     public void addNewToy() {
         ToyModel newToy = view.createToy();
         ToyModel[] updatedToys = Arrays.copyOf(toys, toys.length + 1);
         updatedToys[toys.length] = newToy;
-        toys = updatedToys;
+        this.toys = updatedToys;
         newToy.saveToFile();
+        String message = String.format("Toy '%s' (Quantity: %d) has been successfully added!", newToy.getName(),
+                newToy.getQuantity());
+        view.displayMessage(message);
     }
 
-    public ToyPresenter() {
-        this.view = null;
-        this.toys = new ToyModel[0];
+    public void displayToyList() {
+        view.displayToyList(toys);
     }
 
     public void playLottery() {
+        this.toys = ToyModel.loadFromFile();
         if (toys.length == 0) {
             view.displayMessage("No toys available for lottery.");
             return;
@@ -41,8 +53,9 @@ public class ToyPresenter {
         int selectedToyIndex = weightedRandomChoice(weights);
         ToyModel selectedToy = toys[selectedToyIndex];
         selectedToy.decreaseQuantity();
+        selectedToy.setStatus("won");
         selectedToy.saveToFile();
-        selectedToy.removeFromFile();
+        // selectedToy.removeFromFile();
 
         ToyModel[] updatedToys = new ToyModel[toys.length - 1];
         for (int i = 0, j = 0; i < toys.length; i++) {
@@ -78,4 +91,5 @@ public class ToyPresenter {
     public void setView(ToyView view) {
         this.view = view;
     }
+
 }

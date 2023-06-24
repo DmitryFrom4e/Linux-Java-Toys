@@ -18,21 +18,26 @@ public class ToyView {
     public void start() {
         boolean running = true;
         while (running) {
-            displayMenu();
-            int choice = scanner.nextInt();
-            switch (choice) {
-                case 1:
-                    presenter.addNewToy();
-                    break;
-                case 2:
-                    presenter.playLottery();
-                    break;
-                case 3:
-                    running = false;
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-                    break;
+            // displayMenu();
+            if (scanner.hasNextInt()) {
+                int choice = scanner.nextInt();
+                switch (choice) {
+                    case 1:
+                        presenter.addNewToy();
+                        break;
+                    case 2:
+                        presenter.playLottery();
+                        break;
+                    case 3:
+                        running = false;
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Please try again.");
+                        break;
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.next();
             }
         }
         scanner.close();
@@ -40,25 +45,29 @@ public class ToyView {
 
     public ToyModel createToy() {
         Random random = new Random();
-        int id = random.nextInt(1000); // Генерируем случайное число в диапазоне от 0 до 999
-        scanner.nextLine();
+        int id = random.nextInt(1000);
+        // scanner.nextLine();
         System.out.print("Enter toy name: ");
         String name = scanner.nextLine();
         System.out.print("Enter toy quantity: ");
         int quantity = scanner.nextInt();
+        scanner.nextLine();
         System.out.print("Enter toy weight: ");
         int weight = scanner.nextInt();
 
         return new ToyModel(id, name, quantity, weight);
     }
 
-    private void displayMenu() {
-        System.out.println("Toy Lottery Program");
-        System.out.println("--------------------");
-        System.out.println("1. Add new toy");
-        System.out.println("2. Play lottery");
-        System.out.println("3. Exit");
-        System.out.print("Enter your choice: ");
+    public void displayToyList(ToyModel[] toys) {
+        if (toys.length == 0) {
+            System.out.println("Toy List is empty.");
+        } else {
+            System.out.println("Toy List:");
+            for (ToyModel toy : toys) {
+                System.out.printf("ID: %d, Name: %s, Quantity: %d, Weight: %d, Status: %s%n",
+                        toy.getId(), toy.getName(), toy.getQuantity(), toy.getWeight(), toy.getStatus());
+            }
+        }
     }
 
     public int selectToy(ToyModel[] toys) {
@@ -74,7 +83,8 @@ public class ToyView {
     public void displayPrizeToys(ToyModel[] toys) {
         System.out.println("Prize toys:");
         for (ToyModel toy : toys) {
-            System.out.println(toy.getName());
+            System.out.println(
+                    "ID: " + toy.getId() + ", Name: " + toy.getName() + ", Won Quantity: " + toy.getQuantity());
         }
     }
 
